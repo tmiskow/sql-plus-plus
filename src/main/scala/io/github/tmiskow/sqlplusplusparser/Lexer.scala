@@ -3,12 +3,25 @@ package io.github.tmiskow.sqlplusplusparser
 import scala.util.parsing.combinator.JavaTokenParsers
 
 object Lexer extends JavaTokenParsers {
-  def parse(string: String): ParseResult[List[Tokens]] = parse(tokens, string)
-  private def tokens: Parser[List[Tokens]] = rep(parenthesis | literal | operator)
-  private def literal: Parser[Tokens] =
-    floatingPointNumber ^^ NumericLiteralToken | stringLiteral ^^ StringLiteralToken
-  private def operator: Lexer.Parser[OperatorToken] = ("*" | "/" | "+" | "-") ^^ OperatorToken
-  private def parenthesis: Parser[Tokens] = leftParenthesis | rightParenthesis
-  private def leftParenthesis: Parser[Tokens] = """\(""".r ^^ (_ => LeftParenthesisToken)
-  private def rightParenthesis: Parser[Tokens] = """\)""".r ^^ (_ => RightParenthesisToken)
+  def apply(string: String): Either[LexerError, List[Token]] = {
+    parse(tokens, string) match {
+      case NoSuccess(message, next) =>
+        Left(LexerError(Location(next.pos.line, next.pos.column), message))
+      case Success(result, _) => Right(result)
+    }
+  }
+
+  private def tokens: Parser[List[Token]] =
+    rep(leftParenthesis | rightParenthesis | numericLiteral | characterLiteral | operator)
+
+  private def numericLiteral: Parser[Token] = floatingPointNumber ^^ NumericLiteralToken
+
+  private def characterLiteral: Parser[Token] = super.stringLiteral ^^ StringLiteralToken
+
+  private def operator: Parser[Token] =
+    ("*" | "/" | "+" | "-" | "^" | "%" | "DIV" | "MOD") ^^ OperatorToken
+
+  private def leftParenthesis: Parser[Token] = "(" ^^^ LeftParenthesisToken
+
+  private def rightParenthesis: Parser[Token] = ")" ^^^ RightParenthesisToken
 }
