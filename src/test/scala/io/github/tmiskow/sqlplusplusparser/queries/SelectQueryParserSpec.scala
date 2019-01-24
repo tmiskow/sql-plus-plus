@@ -1,28 +1,27 @@
 package io.github.tmiskow.sqlplusplusparser.queries
 
-import io.github.tmiskow.sqlplusplusparser.{NumberAst, _}
+import io.github.tmiskow.sqlplusplusparser._
 
-class SelectQueryParserSpec extends UnitSpec {
-  override val lexer = new Object with SelectQueryLexer
-  override val parser = new Object with SelectQueryParser
+class SelectQueryParserSpec extends ParserSpec {
+  override def parserMethod: parser.Parser[Ast] = parser.selectQuery
 
   "Parser" should "parse select query" in {
     val string = "SELECT ALL VALUE 45 + 36"
     val result = parseString(string)
-    result shouldBe
+    result shouldBe Right(
       SelectQueryAst(
         Some(KeywordToken("ALL")),
         AdditionAst(
-          NumberAst(NumericLiteralToken("45")),
-          NumberAst(NumericLiteralToken("36"))))
+          LiteralAst(NumericLiteralToken("45")),
+          LiteralAst(NumericLiteralToken("36")))))
   }
 
   it should "parse select query without modifier" in {
     val string = "SELECT VALUE 26.3f"
     val result = parseString(string)
-    result shouldBe
+    result shouldBe Right(
       SelectQueryAst(
         None,
-        NumberAst(NumericLiteralToken("26.3f")))
+        LiteralAst(NumericLiteralToken("26.3f"))))
   }
 }
