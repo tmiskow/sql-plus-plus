@@ -1,12 +1,15 @@
-package io.github.tmiskow.sqlplusplusparser
+package io.github.tmiskow.sqlplusplusparser.expressions
 
-class LexerSpec extends UnitSpec {
+import io.github.tmiskow.sqlplusplusparser._
+
+class ExpressionLexerSpec extends UnitSpec {
+  override val lexer = new Object with ExpressionLexer
 
   "Lexer" should "tokenize numeric literals" in {
     val strings = List("17", "3.14", "16.5f")
     for (string <- strings) {
       val expectedTokens = List(NumericLiteralToken(string))
-      val result = Lexer(string)
+      val result = lexer(string)
       result shouldBe Right(expectedTokens)
     }
   }
@@ -14,7 +17,7 @@ class LexerSpec extends UnitSpec {
   it should "tokenize operators" in {
     val strings = List("+", "-", "*", "/", "%", "DIV", "MOD")
     for (string <- strings) {
-      val result = Lexer(string)
+      val result = lexer(string)
       val expectedTokens = List(OperatorToken(string))
       result shouldBe Right(expectedTokens)
     }
@@ -27,7 +30,7 @@ class LexerSpec extends UnitSpec {
       List(RightParenthesisToken)
     )
     for ((string, expectedTokens) <- strings zip expectedResults) {
-      val result = Lexer(string)
+      val result = lexer(string)
       result shouldBe Right(expectedTokens)
     }
   }
@@ -54,7 +57,7 @@ class LexerSpec extends UnitSpec {
       )
     )
     for ((string, expectedTokens) <- strings zip expectedResults) {
-      val result = Lexer(string)
+      val result = lexer(string)
       result shouldBe Right(expectedTokens)
     }
   }
@@ -83,7 +86,7 @@ class LexerSpec extends UnitSpec {
       )
     )
     for ((string, expectedTokens) <- strings zip expectedResults) {
-      val result = Lexer(string)
+      val result = lexer(string)
       result shouldBe Right(expectedTokens)
     }
   }
