@@ -7,45 +7,39 @@ import io.github.tmiskow.sqlplusplus.parser._
 class ExpressionParserSpec extends ParserSpec {
   override def parserMethod: parser.Parser[Ast] = parser.expression
 
-  "Parser" should "parse integer numeric literals tokens" in {
-    val strings = List("17", "-13")
-    for (string <- strings) {
-      val result = parseString(string)
-      result shouldBe Right(LiteralAst(IntNumericLiteralToken(string)))
-    }
+  "Parser" should "parse addition" in {
+    val result = parseString("17 + 3.14")
+    result shouldBe Right(
+      AdditionAst(
+        LiteralAst(IntNumericLiteralToken("17")),
+        LiteralAst(FloatNumericLiteralToken("3.14"))))
   }
 
-  it should "parse float numeric literals tokens" in {
-    val strings = List("3.14", "-16.5f")
-    for (string <- strings) {
-      val result = parseString(string)
-      result shouldBe Right(LiteralAst(FloatNumericLiteralToken(string)))
-    }
-  }
-
-  it should "parse addition and subtraction tokens" in {
-    val result = parseString("17 + 3.14 - 16.5f")
+  it should "parse subtraction" in {
+    val result = parseString("3.14 - 16.5f")
     result shouldBe Right(
       SubtractionAst(
-        AdditionAst(
-          LiteralAst(IntNumericLiteralToken("17")),
-          LiteralAst(FloatNumericLiteralToken("3.14"))),
+        LiteralAst(FloatNumericLiteralToken("3.14")),
         LiteralAst(FloatNumericLiteralToken("16.5f"))))
   }
 
-  it should "parse multiplication and division tokens" in {
-    val result = parseString("17 * 3.14 + 2137 / 16.5f")
+  it should "parse multiplication" in {
+    val result = parseString("17 * 3.14")
     result shouldBe Right(
-      AdditionAst(
-        MultiplicationAst(
-          LiteralAst(IntNumericLiteralToken("17")),
-          LiteralAst(FloatNumericLiteralToken("3.14"))),
-        DivisionAst(
-          LiteralAst(IntNumericLiteralToken("2137")),
-          LiteralAst(FloatNumericLiteralToken("16.5f")))))
+      MultiplicationAst(
+        LiteralAst(IntNumericLiteralToken("17")),
+        LiteralAst(FloatNumericLiteralToken("3.14"))))
   }
 
-  it should "parse integer division token" in {
+  it should "parse division" in {
+    val result = parseString("2137 / 16.5f")
+    result shouldBe Right(
+      DivisionAst(
+        LiteralAst(IntNumericLiteralToken("2137")),
+        LiteralAst(FloatNumericLiteralToken("16.5f"))))
+  }
+
+  it should "parse integer division" in {
     val result = parseString("17 DIV 3")
     result shouldBe Right(
       IntegerDivisionAst(
@@ -53,35 +47,37 @@ class ExpressionParserSpec extends ParserSpec {
         LiteralAst(IntNumericLiteralToken("3"))))
   }
 
-  it should "parse modulo tokens" in {
-    val result = parseString("17 MOD 3 + 57 % 5")
-    result shouldBe Right(
-      AdditionAst(
+  it should "parse modulo operation" in {
+    val strings = List("17 MOD 3", "17 % 3")
+    for (string <- strings) {
+      val result = parseString(string)
+      result shouldBe Right(
         ModuloAst(
           LiteralAst(IntNumericLiteralToken("17")),
-          LiteralAst(IntNumericLiteralToken("3"))),
-        ModuloAst(
-          LiteralAst(IntNumericLiteralToken("57")),
-          LiteralAst(IntNumericLiteralToken("5")))))
+          LiteralAst(IntNumericLiteralToken("3"))))
+    }
   }
 
-  it should "parse exponentiation expressions" in {
-    val result = parseString("2 * 17 ^ 3.14 * 2137 ^ 16.5f ^ 3")
+  it should "parse exponentiation" in {
+    val result = parseString("17 ^ 3.14")
     result shouldBe Right(
-      MultiplicationAst(
-        MultiplicationAst(
-          LiteralAst(IntNumericLiteralToken("2")),
-          ExponentiationAst(
-            LiteralAst(IntNumericLiteralToken("17")),
-            LiteralAst(FloatNumericLiteralToken("3.14")))),
-        ExponentiationAst(
-          ExponentiationAst(
-            LiteralAst(IntNumericLiteralToken("2137")),
-            LiteralAst(FloatNumericLiteralToken("16.5f"))),
-          LiteralAst(IntNumericLiteralToken("3")))))
+      ExponentiationAst(
+        LiteralAst(IntNumericLiteralToken("17")),
+        LiteralAst(FloatNumericLiteralToken("3.14"))))
   }
 
   it should "parse parenthesised expressions" in {
+    val string = "(17 * (2137 - 5))"
+    val result = parseString(string)
+    result shouldBe Right(
+      MultiplicationAst(
+        LiteralAst(IntNumericLiteralToken("17")),
+        SubtractionAst(
+          LiteralAst(IntNumericLiteralToken("2137")),
+          LiteralAst(IntNumericLiteralToken("5")))))
+  }
+
+  it should "parse complex expressions" in {
     val string = "(17 * (2137 - 5)) ^ (3.14 / (4.5 + 0f))"
     val result = parseString(string)
     result shouldBe Right(

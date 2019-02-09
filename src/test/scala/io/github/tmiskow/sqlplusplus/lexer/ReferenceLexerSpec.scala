@@ -1,7 +1,4 @@
-package io.github.tmiskow.sqlplusplus.lexer.expressions.primary
-
-import io.github.tmiskow.sqlplusplus._
-import io.github.tmiskow.sqlplusplus.lexer.{ParameterToken, Token, VariableToken}
+package io.github.tmiskow.sqlplusplus.lexer
 
 class ReferenceLexerSpec extends LexerSpec  {
   override def tokenizerMethod: lexer.Parser[Token] = lexer.reference

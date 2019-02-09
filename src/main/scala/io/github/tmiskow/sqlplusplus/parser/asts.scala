@@ -17,4 +17,12 @@ case class ExponentiationAst(left: ExpressionAst, right: ExpressionAst) extends 
 case class VariableAst(token: Token) extends Ast
 case class ParameterAst(token: Token) extends Ast
 
-case class SelectQueryAst(modifier: Option[Token], expression: ExpressionAst) extends Ast
+case class WithClauseAst(withElements: List[WithElementAst]) extends Ast
+case class WithElementAst(variable: VariableAst, expression: ExpressionAst) extends Ast
+
+case class LetClauseAst(letElements: List[LetElementAst]) extends Ast
+case class LetElementAst(variable: VariableAst, expression: ExpressionAst) extends Ast
+
+case class SelectStatementAst(withClause: Option[WithClauseAst], selectSetOperation: SelectSetOperationAst) extends Ast
+case class SelectSetOperationAst(selectBlock: SelectBlockAst) extends Ast
+case class SelectBlockAst(modifier: Option[Token], expression: ExpressionAst) extends Ast

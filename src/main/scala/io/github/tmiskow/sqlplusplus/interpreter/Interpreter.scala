@@ -4,7 +4,7 @@ import io.github.tmiskow.sqlplusplus.interpreter.expressions.operator.Expression
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.primary.LiteralInterpreter
 import io.github.tmiskow.sqlplusplus.interpreter.queries.SelectQueryInterpreter
 import io.github.tmiskow.sqlplusplus.lexer.{BaseLexer, Lexer, Token}
-import io.github.tmiskow.sqlplusplus.parser.{Ast, BaseParser, Parser, SelectQueryAst}
+import io.github.tmiskow.sqlplusplus.parser.{Ast, BaseParser, Parser, SelectBlockAst}
 
 object Interpreter extends BaseInterpreter
   with SelectQueryInterpreter
@@ -30,7 +30,7 @@ object Interpreter extends BaseInterpreter
   }
 
   private def handleTokens(tokens: Seq[Token]): Unit = {
-    val result = parser.parseTokens(tokens, parser.selectQuery)
+    val result = parser.parseTokens(tokens, parser.selectBlock)
     result match {
       case Left(error) => println(error)
       case Right(ast) => handleAst(ast)
@@ -38,7 +38,7 @@ object Interpreter extends BaseInterpreter
   }
 
   private def handleAst(ast: Ast): Unit = ast match {
-    case query: SelectQueryAst =>
+    case query: SelectBlockAst =>
       val result = evaluateSelectQuery(query)
       result match {
         case Left(error) => println(error)

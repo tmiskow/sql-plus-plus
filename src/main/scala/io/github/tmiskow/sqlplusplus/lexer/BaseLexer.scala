@@ -2,14 +2,15 @@ package io.github.tmiskow.sqlplusplus.lexer
 
 import io.github.tmiskow.sqlplusplus.{LexerError, Location}
 
-import scala.util.parsing.combinator.JavaTokenParsers
+import scala.util.parsing.combinator.RegexParsers
 
-trait BaseLexer extends JavaTokenParsers {
+trait BaseLexer extends RegexParsers {
   type Result[T] = Either[LexerError, T]
 
   protected class StringExtensions(str: String) {
     def ignoreCase: Parser[String] = ("""(?i)\Q""" + str + """\E""").r
   }
+
   protected implicit def extendString(string: String): StringExtensions =
     new StringExtensions(string)
 
@@ -29,9 +30,13 @@ trait BaseLexer extends JavaTokenParsers {
     }
   }
 
-  def all: Parser[Seq[Token]] = rep1(selectQuery | expression | literal)
-  def selectQuery: Parser[Token] = ???
-  def expression: Parser[Token] = ???
-  def reference: Parser[Token] = ???
+  def all: Parser[Seq[Token]] = rep1(
+    literal | keyword | operator | symbol | reference
+  )
+
   def literal: Parser[Token] = ???
+  def keyword: Parser[Token] = ???
+  def operator: Parser[Token] = ???
+  def reference: Parser[Token] = ???
+  def symbol: Parser[Token] = ???
 }

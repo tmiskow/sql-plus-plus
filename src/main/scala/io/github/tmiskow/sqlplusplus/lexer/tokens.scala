@@ -4,6 +4,8 @@ sealed trait Token
 
 case object LeftParenthesisToken extends Token
 case object RightParenthesisToken extends Token
+case object CommaToken extends Token
+case object SemicolonToken extends Token
 case class OperatorToken(string: String) extends Token
 
 case class StringLiteralToken(string: String) extends Token
