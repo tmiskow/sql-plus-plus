@@ -10,7 +10,7 @@ class SelectBlockParserSpec extends ParserSpec {
     val string = "SELECT ALL VALUE 45 + 36"
     val result = parseString(string)
     result shouldBe Right(
-      SelectBlockAst(
+      SelectClauseAst(
         Some(KeywordToken("ALL")),
         AdditionAst(
           LiteralAst(IntNumericLiteralToken("45")),
@@ -21,7 +21,7 @@ class SelectBlockParserSpec extends ParserSpec {
     val string = "SELECT VALUE 26.3f"
     val result = parseString(string)
     result shouldBe Right(
-      SelectBlockAst(
+      SelectClauseAst(
         None,
         LiteralAst(FloatNumericLiteralToken("26.3f"))))
   }

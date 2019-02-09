@@ -1,10 +1,12 @@
 package io.github.tmiskow.sqlplusplus.interpreter
 
-import io.github.tmiskow.sqlplusplus.InterpreterError
-import io.github.tmiskow.sqlplusplus.parser.{ExpressionAst, LiteralAst}
+import io.github.tmiskow.sqlplusplus.interpreter.value.Value
+import io.github.tmiskow.sqlplusplus.parser._
 
 trait BaseInterpreter {
-  type Result[T] = Either[InterpreterError, T]
-  def evaluateExpression(expression: ExpressionAst): Result[Value] = ???
-  def evaluateLiteral(literal: LiteralAst): Result[Value] = ???
+  def evaluateQuery(query: Ast): Value = ???
+  def evaluateSelectBlock(selectBlock: SelectBlockAst, environment: Environment): Value = ???
+  def evaluateSelectClause(query: SelectClauseAst, environment: Environment): Value = ???
+  def evaluateExpression(expression: ExpressionAst, environment: Environment): Value = ???
+  def evaluateLiteral(literal: LiteralAst): Value = ???
 }

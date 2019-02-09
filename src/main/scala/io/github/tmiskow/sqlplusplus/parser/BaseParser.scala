@@ -26,9 +26,10 @@ trait BaseParser extends Parsers {
     }
   }
 
-  def all: Parser[Ast] = query | selectBlock | expression
+  def all: Parser[Ast] = query | selectBlock | expression | constructor | variable
+  def variable: Parser[VariableAst] = ???
+  def constructor: Parser[ConstructorAst] = ???
   def query: Parser[Ast] = ???
   def selectBlock: Parser[SelectBlockAst] = ???
   def expression: Parser[ExpressionAst] = ???
-  def reference: Parser[Ast] = ???
 }

@@ -10,7 +10,8 @@ trait KeywordLexer extends BaseLexer {
     "with",
     "raw",
     "element",
-    "value"
+    "value",
+    "from"
   ).map(keyword => keyword.ignoreCase ^^ (_.toUpperCase()) ^^ KeywordToken ^^ {
     case KeywordToken("RAW") | KeywordToken("ELEMENT") => KeywordToken("VALUE")
     case token => token

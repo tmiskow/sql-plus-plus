@@ -2,19 +2,23 @@ package io.github.tmiskow.sqlplusplus.lexer
 
 sealed trait Token
 
-case object LeftParenthesisToken extends Token
-case object RightParenthesisToken extends Token
-case object CommaToken extends Token
-case object SemicolonToken extends Token
-case class OperatorToken(string: String) extends Token
+sealed trait SymbolToken extends Token
+case object LeftParenthesisToken extends SymbolToken
+case object RightParenthesisToken extends SymbolToken
+case object LeftArrayBracketToken extends SymbolToken
+case object RightArrayBracketToken extends SymbolToken
+case object CommaToken extends SymbolToken
+case object SemicolonToken extends SymbolToken
+case object ColonToken extends SymbolToken
+case class OperatorToken(string: String) extends SymbolToken
 
-case class StringLiteralToken(string: String) extends Token
-case object NullLiteralToken extends Token
-case object MissingLiteralToken extends Token
-case object TrueLiteralToken extends Token
-case object FalseLiteralToken extends Token
-
-trait NumericLiteralToken extends Token
+sealed trait LiteralToken extends Token
+case class StringLiteralToken(string: String) extends LiteralToken
+case object NullLiteralToken extends LiteralToken
+case object MissingLiteralToken extends LiteralToken
+case object TrueLiteralToken extends LiteralToken
+case object FalseLiteralToken extends LiteralToken
+sealed trait NumericLiteralToken extends LiteralToken
 case class IntNumericLiteralToken(string: String) extends NumericLiteralToken
 case class FloatNumericLiteralToken(string: String) extends NumericLiteralToken
 

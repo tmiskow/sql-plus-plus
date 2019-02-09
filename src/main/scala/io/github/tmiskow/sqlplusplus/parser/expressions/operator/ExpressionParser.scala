@@ -7,27 +7,31 @@ trait ExpressionParser extends BaseParser {
   override def expression: Parser[ExpressionAst] = chainl1(term,
     OperatorToken("+") ^^^ AdditionAst | OperatorToken("-") ^^^ SubtractionAst)
 
-  def term: Parser[ExpressionAst] = chainl1(priorityTerm,
+  override def variable: Parser[VariableAst] = accept("variable", {
+    case VariableToken(name) => VariableAst(name)
+  })
+
+  private def term: Parser[ExpressionAst] = chainl1(priorityTerm,
     OperatorToken("*") ^^^ MultiplicationAst
       | OperatorToken("/") ^^^ DivisionAst
       | OperatorToken("DIV") ^^^ IntegerDivisionAst
       | (OperatorToken("%") | OperatorToken("MOD")) ^^^ ModuloAst
   )
 
-  def priorityTerm: Parser[ExpressionAst] =
+  private def priorityTerm: Parser[ExpressionAst] =
     chainl1(factor, OperatorToken("^") ^^^ ExponentiationAst)
 
   def factor: Parser[ExpressionAst] =
-    literal | LeftParenthesisToken ~> expression <~ RightParenthesisToken
+    literal | variable | LeftParenthesisToken ~> expression <~ RightParenthesisToken
 
-  def literal: Parser[ExpressionAst] = strLiteral | numericLiteral |
+  private def literal: Parser[ExpressionAst] = stringLiteral | numericLiteral |
     (NullLiteralToken | MissingLiteralToken | TrueLiteralToken | FalseLiteralToken) ^^ LiteralAst
 
-  def strLiteral: Parser[ExpressionAst] = accept("literal", {
+  private def stringLiteral: Parser[ExpressionAst] = accept("literal", {
     case token@StringLiteralToken(_) => LiteralAst(token)
   })
 
-  def numericLiteral: Parser[ExpressionAst] = accept("literal", {
+  private def numericLiteral: Parser[ExpressionAst] = accept("literal", {
     case token : IntNumericLiteralToken => LiteralAst(token)
     case token : FloatNumericLiteralToken => LiteralAst(token)
   })
