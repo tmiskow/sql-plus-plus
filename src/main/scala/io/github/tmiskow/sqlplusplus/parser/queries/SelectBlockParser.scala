@@ -15,5 +15,5 @@ trait SelectBlockParser extends BaseParser {
   private def fromTerm: Parser[FromTermAst] =
     (expression ~ (KeywordToken("AS") ~> variable)) ^^ {case expression ~ variable => FromTermAst(expression, variable)}
 
-  private def modifier: Parser[Option[Token]] = opt(KeywordToken("ALL") | KeywordToken("DISTINCT"))
+  private def modifier: Parser[Option[Token]] = (KeywordToken("ALL") | KeywordToken("DISTINCT"))?
 }

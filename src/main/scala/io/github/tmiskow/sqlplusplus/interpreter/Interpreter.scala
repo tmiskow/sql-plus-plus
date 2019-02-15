@@ -1,7 +1,8 @@
 package io.github.tmiskow.sqlplusplus.interpreter
 
-import io.github.tmiskow.sqlplusplus.interpreter.expressions.operator.ExpressionsInterpreter
-import io.github.tmiskow.sqlplusplus.interpreter.expressions.primary.LiteralInterpreter
+import io.github.tmiskow.sqlplusplus.interpreter.expressions.ExpressionInterpreter
+import io.github.tmiskow.sqlplusplus.interpreter.expressions.operator.ArithmeticExpressionsInterpreter
+import io.github.tmiskow.sqlplusplus.interpreter.expressions.primary.{ConstructorInterpreter, LiteralInterpreter, VariableInterpreter}
 import io.github.tmiskow.sqlplusplus.interpreter.queries.{QueryInterpreter, SelectBlockInterpreter}
 import io.github.tmiskow.sqlplusplus.lexer.{BaseLexer, Lexer, Token}
 import io.github.tmiskow.sqlplusplus.parser.{Ast, BaseParser, Parser}
@@ -9,7 +10,10 @@ import io.github.tmiskow.sqlplusplus.parser.{Ast, BaseParser, Parser}
 object Interpreter extends BaseInterpreter
   with QueryInterpreter
   with SelectBlockInterpreter
-  with ExpressionsInterpreter
+  with ExpressionInterpreter
+  with ArithmeticExpressionsInterpreter
+  with ConstructorInterpreter
+  with VariableInterpreter
   with LiteralInterpreter {
   val lexer: BaseLexer = Lexer
   val parser: BaseParser = Parser
@@ -39,6 +43,6 @@ object Interpreter extends BaseInterpreter
 
   private def handleAst(ast: Ast): Unit = {
     val result = evaluateQuery(ast)
-    println(result)
+    println(result.toCollectionValue)
   }
 }

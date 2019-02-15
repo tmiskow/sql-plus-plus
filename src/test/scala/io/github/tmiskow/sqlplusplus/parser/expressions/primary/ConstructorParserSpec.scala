@@ -1,4 +1,4 @@
-package io.github.tmiskow.sqlplusplus.parser.expressions
+package io.github.tmiskow.sqlplusplus.parser.expressions.primary
 
 import io.github.tmiskow.sqlplusplus.lexer._
 import io.github.tmiskow.sqlplusplus.parser.{ArrayConstructorAst, Ast, LiteralAst, ParserSpec}

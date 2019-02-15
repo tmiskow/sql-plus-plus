@@ -3,6 +3,31 @@ package io.github.tmiskow.sqlplusplus.interpreter.value
 case class IntValue(value: Int) extends ScalarValue {
   override def toString: String = value.toString
 
+  override def ===(other: Value): BooleanValue = other match {
+    case IntValue(otherValue) => BooleanValue.from(value == otherValue)
+    case FloatValue(otherValue) => BooleanValue.from(value == otherValue)
+    case _ => super.===(other)
+  }
+
+  override def <>(other: Value): BooleanValue = other match {
+    case IntValue(otherValue) => BooleanValue.from(value != otherValue)
+    case FloatValue(otherValue) => BooleanValue.from(value != otherValue)
+    case _ => super.<>(other)
+  }
+
+
+  override def <(other: Value): BooleanValue = other match {
+    case IntValue(otherValue) => BooleanValue.from(value < otherValue)
+    case FloatValue(otherValue) => BooleanValue.from(value < otherValue)
+    case _ => super.<(other)
+  }
+
+  override def <=(other: Value): BooleanValue = other match {
+    case IntValue(otherValue) => BooleanValue.from(value <= otherValue)
+    case FloatValue(otherValue) => BooleanValue.from(value <= otherValue)
+    case _ => super.<=(other)
+  }
+
   override def +(other: Value): Value = other match {
     case IntValue(otherValue) => IntValue(value + otherValue)
     case FloatValue(otherValue) => FloatValue(value.toFloat + otherValue)

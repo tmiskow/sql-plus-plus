@@ -9,14 +9,20 @@ sealed trait ExpressionAst extends Ast
 case class LiteralAst(token: Token) extends ExpressionAst
 case class VariableAst(name: String) extends ExpressionAst
 
-sealed trait OperatorExpressionAst extends ExpressionAst
-case class AdditionAst(left: ExpressionAst, right: ExpressionAst) extends OperatorExpressionAst
-case class SubtractionAst(left: ExpressionAst, right: ExpressionAst) extends OperatorExpressionAst
-case class MultiplicationAst(left: ExpressionAst, right: ExpressionAst) extends OperatorExpressionAst
-case class DivisionAst(left: ExpressionAst, right: ExpressionAst) extends OperatorExpressionAst
-case class IntegerDivisionAst(left: ExpressionAst, right: ExpressionAst) extends OperatorExpressionAst
-case class ModuloAst(left: ExpressionAst, right: ExpressionAst) extends OperatorExpressionAst
-case class ExponentiationAst(left: ExpressionAst, right: ExpressionAst) extends OperatorExpressionAst
+sealed trait ArithmeticExpressionAst extends ExpressionAst
+case class AdditionAst(left: ExpressionAst, right: ExpressionAst) extends ArithmeticExpressionAst
+case class SubtractionAst(left: ExpressionAst, right: ExpressionAst) extends ArithmeticExpressionAst
+case class MultiplicationAst(left: ExpressionAst, right: ExpressionAst) extends ArithmeticExpressionAst
+case class DivisionAst(left: ExpressionAst, right: ExpressionAst) extends ArithmeticExpressionAst
+case class IntegerDivisionAst(left: ExpressionAst, right: ExpressionAst) extends ArithmeticExpressionAst
+case class ModuloAst(left: ExpressionAst, right: ExpressionAst) extends ArithmeticExpressionAst
+case class ExponentiationAst(left: ExpressionAst, right: ExpressionAst) extends ArithmeticExpressionAst
+
+sealed trait ComparisonExpressionAst extends ExpressionAst
+case class EqualityAst(left: ExpressionAst, right: ExpressionAst) extends ComparisonExpressionAst
+case class InequalityAst(left: ExpressionAst, right: ExpressionAst) extends ComparisonExpressionAst
+case class LessThanAst(left: ExpressionAst, right: ExpressionAst) extends ComparisonExpressionAst
+case class LessOrEqualThanAst(left: ExpressionAst, right: ExpressionAst) extends ComparisonExpressionAst
 
 sealed trait ConstructorAst extends ExpressionAst
 case class ArrayConstructorAst(elements: Seq[ExpressionAst]) extends ConstructorAst

@@ -4,8 +4,8 @@ import io.github.tmiskow.sqlplusplus._
 import io.github.tmiskow.sqlplusplus.lexer.{FloatNumericLiteralToken, IntNumericLiteralToken}
 import io.github.tmiskow.sqlplusplus.parser._
 
-class OperatorExpressionParserSpec extends ParserSpec {
-  override def parserMethod: parser.Parser[Ast] = parser.expression
+class ArithmeticExpressionParserSpec extends ParserSpec {
+  override def parserMethod: parser.Parser[Ast] = parser.arithmeticExpression
 
   "Parser" should "parse addition" in {
     val result = parseString("17 + 3.14")
