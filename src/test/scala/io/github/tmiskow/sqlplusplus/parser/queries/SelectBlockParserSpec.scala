@@ -13,12 +13,11 @@ class SelectBlockParserSpec extends ParserSpec {
     val result = parseString(string)
     result shouldBe Right(
       SelectBlockAst(
-        SelectClauseAst(
-          Some(KeywordToken("ALL")),
-          AdditionAst(
-            LiteralAst(IntNumericLiteralToken("45")),
-            LiteralAst(IntNumericLiteralToken("36")))),
-        None))
+        AdditionAst(
+          LiteralAst(IntNumericLiteralToken("45")),
+          LiteralAst(IntNumericLiteralToken("36"))),
+        None,
+        Some(KeywordToken("ALL"))))
   }
 
   it should "parse select block without modifier" in {
@@ -26,9 +25,8 @@ class SelectBlockParserSpec extends ParserSpec {
     val result = parseString(string)
     result shouldBe Right(
       SelectBlockAst(
-        SelectClauseAst(
-          None,
-          LiteralAst(FloatNumericLiteralToken("26.3f"))),
+        LiteralAst(FloatNumericLiteralToken("26.3f")),
+        None,
         None))
   }
 
@@ -37,15 +35,14 @@ class SelectBlockParserSpec extends ParserSpec {
     val result = parseString(string)
     result shouldBe Right(
       SelectBlockAst(
-        SelectClauseAst(
-          None,
-          VariableAst("foo")),
+        VariableAst("foo"),
         Some(FromClauseAst(List(
           FromTermAst(
             ArrayConstructorAst(List(
               LiteralAst(IntNumericLiteralToken("1")),
               LiteralAst(IntNumericLiteralToken("2")),
               LiteralAst(IntNumericLiteralToken("3")))),
-            VariableAst("foo")))))))
+            VariableAst("foo"))))),
+        None))
   }
 }

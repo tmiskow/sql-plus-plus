@@ -14,7 +14,7 @@ trait ExpressionsInterpreter extends BaseInterpreter {
       case _ => throw InterpreterException(s"Unexpected expression AST type: $expression")
     }
 
-  private def evaluateOperatorExpression(expression: ExpressionAst, environment: Environment): Value =
+  private def evaluateOperatorExpression(expression: OperatorExpressionAst, environment: Environment): Value =
     expression match {
       case AdditionAst(left, right) => evaluateBinaryOperation(_ + _)(left, right, environment)
       case SubtractionAst(left, right) => evaluateBinaryOperation(_ - _)(left, right, environment)

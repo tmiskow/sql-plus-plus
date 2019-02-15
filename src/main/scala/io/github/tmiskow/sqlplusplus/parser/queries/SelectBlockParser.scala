@@ -5,12 +5,8 @@ import io.github.tmiskow.sqlplusplus.parser._
 
 trait SelectBlockParser extends BaseParser {
   override def selectBlock: Parser[SelectBlockAst] =
-    (selectClause ~ (fromClause?)) ^^ {case select ~ from => SelectBlockAst(select, from)}
-
-  private def selectClause: Parser[SelectClauseAst] =
-    (KeywordToken("SELECT") ~> modifier) ~ (KeywordToken("VALUE") ~> expression) ^^ {
-    case modifierAst ~ expressionAst => SelectClauseAst(modifierAst, expressionAst)
-  }
+    ((KeywordToken("SELECT") ~> modifier) ~ (KeywordToken("VALUE") ~> expression) ~ (fromClause?)) ^^
+      {case modifier ~ expression ~ fromClause => SelectBlockAst(expression, fromClause, modifier)}
 
   private def fromClause: Parser[FromClauseAst] =
     (KeywordToken("FROM") ~> rep1sep(fromTerm, CommaToken)) ^^ FromClauseAst
