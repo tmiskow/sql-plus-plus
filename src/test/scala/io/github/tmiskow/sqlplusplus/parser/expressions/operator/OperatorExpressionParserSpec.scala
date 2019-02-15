@@ -4,7 +4,7 @@ import io.github.tmiskow.sqlplusplus._
 import io.github.tmiskow.sqlplusplus.lexer.{FloatNumericLiteralToken, IntNumericLiteralToken}
 import io.github.tmiskow.sqlplusplus.parser._
 
-class ExpressionParserSpec extends ParserSpec {
+class OperatorExpressionParserSpec extends ParserSpec {
   override def parserMethod: parser.Parser[Ast] = parser.expression
 
   "Parser" should "parse addition" in {

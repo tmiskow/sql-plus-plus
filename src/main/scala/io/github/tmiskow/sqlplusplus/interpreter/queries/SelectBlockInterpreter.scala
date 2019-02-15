@@ -1,6 +1,6 @@
 package io.github.tmiskow.sqlplusplus.interpreter.queries
 
-import io.github.tmiskow.sqlplusplus.interpreter.value.{ArrayValue, Value}
+import io.github.tmiskow.sqlplusplus.interpreter.value.{ArrayValue, CollectionValue, Value}
 import io.github.tmiskow.sqlplusplus.interpreter.{BaseInterpreter, Environment}
 import io.github.tmiskow.sqlplusplus.parser._
 
@@ -9,28 +9,28 @@ trait SelectBlockInterpreter extends BaseInterpreter {
     selectBlock.fromClause match {
       case None => evaluateSelectClause(selectBlock.selectClause, environment)
       case Some(fromClause) => {
-        val iterator = evaluateFromClause(fromClause, environment)
-        val selectedValues: List[Value] = for ((variable, expression) <- iterator) {
+        val fromTerm = evaluateFromClause(fromClause, environment).head
+        val collection = evaluateFromTerm(fromTerm, environment).collection
+        val selectedValues: Seq[Value] = for (value <- collection) yield {
           val temporaryEnvironment = environment.clone()
-          temporaryEnvironment.put(variable.name, evaluateExpression(expression, environment))
+          temporaryEnvironment.put(fromTerm.variable.name, value)
           evaluateSelectClause(selectBlock.selectClause, temporaryEnvironment)
         }
         ArrayValue.fromValues(selectedValues)
       }
     }
 
-  private def evaluateSelectClause(selectClause: SelectClauseAst, environment: Environment): Value = {
+  override def evaluateSelectClause(selectClause: SelectClauseAst, environment: Environment): Value = {
     evaluateExpression(selectClause.expression, environment)
   }
 
-  private def evaluateFromClause(fromClause: FromClauseAst, environment: Environment): Seq[(VariableAst, Value)] = {
+  private def evaluateFromClause(fromClause: FromClauseAst, environment: Environment): Seq[FromTermAst] = {
     //TODO: implement for multiple terms
     assert(fromClause.terms.size == 1)
-    val fromTerm = fromClause.terms.head
-    evaluateFromTerm(fromTerm, environment)
+    fromClause.terms
   }
 
-  private def evaluateFromTerm(fromTerm: FromTermAst, environment: Environment): Seq[(VariableAst, Value)] = {
-
+  private def evaluateFromTerm(fromTerm: FromTermAst, environment: Environment): CollectionValue = {
+    evaluateExpression(fromTerm.expression, environment).toCollectionValue
   }
 }

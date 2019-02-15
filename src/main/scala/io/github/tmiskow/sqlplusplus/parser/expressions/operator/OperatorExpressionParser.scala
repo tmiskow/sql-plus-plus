@@ -3,8 +3,8 @@ package io.github.tmiskow.sqlplusplus.parser.expressions.operator
 import io.github.tmiskow.sqlplusplus.lexer._
 import io.github.tmiskow.sqlplusplus.parser._
 
-trait ExpressionParser extends BaseParser {
-  override def expression: Parser[ExpressionAst] = chainl1(term,
+trait OperatorExpressionParser extends BaseParser {
+  override def operatorExpression: Parser[ExpressionAst] = chainl1(term,
     OperatorToken("+") ^^^ AdditionAst | OperatorToken("-") ^^^ SubtractionAst)
 
   override def variable: Parser[VariableAst] = accept("variable", {

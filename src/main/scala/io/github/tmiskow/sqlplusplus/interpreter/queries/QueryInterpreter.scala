@@ -34,6 +34,6 @@ trait QueryInterpreter extends BaseInterpreter {
   }
 
   private def evaluateSelectSetOperation(selectSetOperation: SelectSetOperationAst, environment: Environment): Value = {
-    evaluateSelectClause(selectSetOperation.selectBlock, environment)
+    evaluateSelectBlock(selectSetOperation.selectBlock, environment)
   }
 }

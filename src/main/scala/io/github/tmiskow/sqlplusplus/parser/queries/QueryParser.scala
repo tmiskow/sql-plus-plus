@@ -26,7 +26,7 @@ trait QueryParser extends BaseParser {
     case variable ~ expression => LetElementAst(variable, expression)
   }
 
-  def variable: Parser[VariableAst] = accept("variable", {
-    case token: VariableToken => VariableAst(token)
+  override def variable: Parser[VariableAst] = accept("variable", {
+    case VariableToken(name) => VariableAst(name)
   })
 }

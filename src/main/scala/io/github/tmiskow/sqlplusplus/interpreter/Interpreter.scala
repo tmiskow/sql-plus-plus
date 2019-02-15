@@ -10,8 +10,7 @@ object Interpreter extends BaseInterpreter
   with QueryInterpreter
   with SelectBlockInterpreter
   with ExpressionsInterpreter
-  with LiteralInterpreter
-{
+  with LiteralInterpreter {
   val lexer: BaseLexer = Lexer
   val parser: BaseParser = Parser
 
@@ -39,10 +38,7 @@ object Interpreter extends BaseInterpreter
   }
 
   private def handleAst(ast: Ast): Unit = {
-      val result = evaluateQuery(ast)
-      result match {
-        case Left(error) => println(error)
-        case Right(value) => println(value)
-      }
+    val result = evaluateQuery(ast)
+    println(result)
   }
 }
