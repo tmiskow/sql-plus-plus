@@ -10,8 +10,8 @@ class ComparisonExpressionParserSpec extends ParserSpec {
     val result = parseString("17 = 3.14")
     result shouldBe Right(
       EqualityAst(
-        LiteralAst(IntNumericLiteralToken("17")),
-        LiteralAst(FloatNumericLiteralToken("3.14"))))
+        LiteralAst(IntNumericLiteralToken(17)),
+        LiteralAst(FloatNumericLiteralToken(3.14f))))
   }
 
   it should "parse inequalities" in {
@@ -20,8 +20,8 @@ class ComparisonExpressionParserSpec extends ParserSpec {
       val result = parseString(string)
       result shouldBe Right(
         InequalityAst(
-          LiteralAst(IntNumericLiteralToken("21")),
-          LiteralAst(IntNumericLiteralToken("3"))))
+          LiteralAst(IntNumericLiteralToken(21)),
+          LiteralAst(IntNumericLiteralToken(3))))
     }
   }
 
@@ -31,8 +31,8 @@ class ComparisonExpressionParserSpec extends ParserSpec {
       val result = parseString(string)
       result shouldBe Right(
         LessThanAst(
-          LiteralAst(IntNumericLiteralToken("13")),
-          LiteralAst(IntNumericLiteralToken("756"))))
+          LiteralAst(IntNumericLiteralToken(13)),
+          LiteralAst(IntNumericLiteralToken(756))))
     }
   }
 
@@ -42,8 +42,8 @@ class ComparisonExpressionParserSpec extends ParserSpec {
       val result = parseString(string)
       result shouldBe Right(
         LessOrEqualThanAst(
-          LiteralAst(FloatNumericLiteralToken("0.05")),
-          LiteralAst(IntNumericLiteralToken("-65"))))
+          LiteralAst(FloatNumericLiteralToken(0.05f)),
+          LiteralAst(IntNumericLiteralToken(-65))))
     }
   }
 }

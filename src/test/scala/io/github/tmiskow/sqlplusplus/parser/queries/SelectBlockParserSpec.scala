@@ -12,8 +12,8 @@ class SelectBlockParserSpec extends ParserSpec {
     result shouldBe Right(
       SelectBlockAst(
         AdditionAst(
-          LiteralAst(IntNumericLiteralToken("45")),
-          LiteralAst(IntNumericLiteralToken("36"))),
+          LiteralAst(IntNumericLiteralToken(45)),
+          LiteralAst(IntNumericLiteralToken(36))),
         Some(KeywordToken("ALL")),
         None,
         None))
@@ -24,7 +24,7 @@ class SelectBlockParserSpec extends ParserSpec {
     val result = parseString(string)
     result shouldBe Right(
       SelectBlockAst(
-        LiteralAst(FloatNumericLiteralToken("26.3f")),
+        LiteralAst(FloatNumericLiteralToken(26.3f)),
         None,
         None,
         None))
@@ -40,9 +40,9 @@ class SelectBlockParserSpec extends ParserSpec {
         Some(FromClauseAst(List(
           FromTermAst(
             ArrayConstructorAst(List(
-              LiteralAst(IntNumericLiteralToken("1")),
-              LiteralAst(IntNumericLiteralToken("2")),
-              LiteralAst(IntNumericLiteralToken("3")))),
+              LiteralAst(IntNumericLiteralToken(1)),
+              LiteralAst(IntNumericLiteralToken(2)),
+              LiteralAst(IntNumericLiteralToken(3)))),
             VariableAst("foo"))))),
         None))
   }

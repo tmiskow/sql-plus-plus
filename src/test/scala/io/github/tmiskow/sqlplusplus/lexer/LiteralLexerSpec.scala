@@ -7,7 +7,7 @@ class LiteralLexerSpec extends LexerSpec {
     val strings = List("3", "-2137")
     for (string <- strings) {
       val result = tokenizeString(string)
-      result shouldBe Right(IntNumericLiteralToken(string))
+      result shouldBe Right(IntNumericLiteralToken(string.toInt))
     }
   }
 
@@ -15,7 +15,7 @@ class LiteralLexerSpec extends LexerSpec {
     val strings = List("4.5f", "-37.2")
     for (string <- strings) {
       val result = tokenizeString(string)
-      result shouldBe Right(FloatNumericLiteralToken(string))
+      result shouldBe Right(FloatNumericLiteralToken(string.toFloat))
     }
   }
 
@@ -23,7 +23,7 @@ class LiteralLexerSpec extends LexerSpec {
     val strings = List("\"string\"", "'string'")
     for (string <- strings) {
       val result = tokenizeString(string)
-      result shouldBe Right(StringLiteralToken(string))
+      result shouldBe Right(StringLiteralToken("string"))
     }
   }
 

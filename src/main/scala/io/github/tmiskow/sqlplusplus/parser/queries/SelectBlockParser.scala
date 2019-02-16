@@ -20,8 +20,8 @@ trait SelectBlockParser extends BaseParser {
     (KeywordToken("FROM") ~> rep1sep(fromTerm, CommaToken)) ^^ FromClauseAst
 
   //TODO: ... (( <AS> )? Variable)? ( ( JoinType )? ( JoinClause | UnnestClause ) )*
-  private def fromTerm: Parser[FromTermAst] = (expression ~ (KeywordToken("AS") ~> variable)) ^^ {
-    case expression ~ variable => FromTermAst(expression, variable)
+  private def fromTerm: Parser[FromTermAst] = (constructor ~ (KeywordToken("AS") ~> variable)) ^^ {
+    case constructor ~ variable => FromTermAst(constructor, variable)
   }
 
   private def modifier: Parser[Option[Token]] = (KeywordToken("ALL") | KeywordToken("DISTINCT"))?

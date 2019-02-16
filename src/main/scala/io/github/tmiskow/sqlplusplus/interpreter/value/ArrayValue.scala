@@ -2,14 +2,10 @@ package io.github.tmiskow.sqlplusplus.interpreter.value
 
 import play.api.libs.json.Json
 
-case class ArrayValue(override val collection: List[Value]) extends CollectionValue(collection) {
+case class ArrayValue(seq: Seq[Value]) extends CollectionValue {
+  override def toArrayValue: ArrayValue = this
+
   override def toString: String = Json.prettyPrint(Json.toJson(this))
 
-  override def distinct: CollectionValue = {
-    ArrayValue.fromValues(collection.distinct)
-  }
-}
-
-object ArrayValue {
-  def fromValues(values: Seq[Value]) = ArrayValue(values.toList)
+  override def distinct: CollectionValue = ArrayValue(seq.distinct)
 }

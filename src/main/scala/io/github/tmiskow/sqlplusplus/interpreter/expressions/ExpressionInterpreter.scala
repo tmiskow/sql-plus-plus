@@ -13,8 +13,9 @@ trait ExpressionInterpreter extends BaseInterpreter {
       case LessOrEqualThanAst(left, right) => evaluateBinaryComparison(_ <= _)(left, right, environment)
     }
 
-  def evaluateBinaryComparison(operation: (Value, Value) => BooleanValue)
-                              (left: ExpressionAst, right: ExpressionAst, environment: Environment): BooleanValue = {
+  def evaluateBinaryComparison
+  (operation: (Value, Value) => BooleanValue)
+  (left: ExpressionAst, right: ExpressionAst, environment: Environment): BooleanValue = {
     val leftValue = evaluateExpression(left, environment)
     val rightValue = evaluateExpression(right, environment)
     operation(leftValue, rightValue)

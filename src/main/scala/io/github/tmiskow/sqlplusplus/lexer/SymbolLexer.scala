@@ -9,5 +9,7 @@ trait SymbolLexer extends BaseLexer {
     | "]" ^^^ RightArrayBracketToken
     | "(" ^^^ LeftParenthesisToken
     | ")" ^^^ RightParenthesisToken
+    | "{" ^^^ LeftObjectBracketToken
+    | "}" ^^^ RightObjectBracketToken
   )
 }

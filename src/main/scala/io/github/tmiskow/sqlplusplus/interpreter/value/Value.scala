@@ -28,7 +28,7 @@ trait Value {
 
   def integerDivision(other: Value): Value = throwDefaultError
 
-  def toCollectionValue: CollectionValue
+  def toArrayValue: ArrayValue = ArrayValue(List(this))
 }
 
 object Value {
@@ -37,7 +37,8 @@ object Value {
       case IntValue(integer) => JsNumber(integer)
       case FloatValue(float) => JsNumber(float.toDouble)
       case StringValue(string) => JsString(string)
-      case ArrayValue(collection) => JsArray(collection.map {writes})
+      case ArrayValue(seq) => JsArray(seq.map {writes})
+      case ObjectValue(map) => JsObject(map.map {case (key, value) => (key, writes(value))})
       case TrueValue => JsTrue
       case FalseValue => JsFalse
     }

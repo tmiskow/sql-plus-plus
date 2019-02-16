@@ -1,6 +1,6 @@
 package io.github.tmiskow.sqlplusplus.interpreter.queries
 
-import io.github.tmiskow.sqlplusplus.interpreter.value.{ArrayValue, CollectionValue, TrueValue, Value}
+import io.github.tmiskow.sqlplusplus.interpreter.value._
 import io.github.tmiskow.sqlplusplus.interpreter.{BaseInterpreter, Environment, InterpreterException}
 import io.github.tmiskow.sqlplusplus.lexer.{KeywordToken, Token}
 import io.github.tmiskow.sqlplusplus.parser._
@@ -9,7 +9,7 @@ trait SelectBlockInterpreter extends BaseInterpreter {
   override def evaluateSelectBlock(selectBlock: SelectBlockAst, environment: Environment): CollectionValue = {
     val values = evaluateFromClause(selectBlock.expression, selectBlock.fromClause, environment)
     val filteredValues = evaluateWhereClause(values, selectBlock.whereClause, selectBlock.fromClause, environment)
-    ArrayValue.fromValues(evaluateModifier(filteredValues, selectBlock.modifier))
+    ArrayValue(evaluateModifier(filteredValues, selectBlock.modifier))
   }
 
   private def evaluateModifier(values: Seq[Value], modifier: Option[Token]): Seq[Value] =
@@ -22,7 +22,7 @@ trait SelectBlockInterpreter extends BaseInterpreter {
   private def evaluateFromClause
   (expression: ExpressionAst, maybeFromClause: Option[FromClauseAst], environment: Environment): Seq[Value] =
     maybeFromClause match {
-      case None => evaluateExpression(expression, environment).toCollectionValue.collection
+      case None => evaluateExpression(expression, environment).toArrayValue.seq
       case Some(fromClause) =>
         evaluateExpressionInFromClauseContext(expression, fromClause, environment)
     }
@@ -51,7 +51,10 @@ trait SelectBlockInterpreter extends BaseInterpreter {
     //TODO: implement for multiple terms
     assert(fromClause.terms.size == 1)
     val fromTerm = fromClause.terms.head
-    val values = evaluateExpression(fromTerm.expression, environment).toCollectionValue.collection
-    evaluateExpressionInIteratingEnvironment(expression, fromTerm.variable, values, environment)
+    evaluateExpression(fromTerm.expression, environment) match {
+      case ArrayValue(seq) =>
+        evaluateExpressionInIteratingEnvironment(expression, fromTerm.variable, seq, environment)
+      case _ => throw InterpreterException("Collection used in FROM clause must be an array")
+    }
   }
 }

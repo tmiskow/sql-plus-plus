@@ -7,6 +7,8 @@ case object LeftParenthesisToken extends SymbolToken
 case object RightParenthesisToken extends SymbolToken
 case object LeftArrayBracketToken extends SymbolToken
 case object RightArrayBracketToken extends SymbolToken
+case object LeftObjectBracketToken extends SymbolToken
+case object RightObjectBracketToken extends SymbolToken
 case object CommaToken extends SymbolToken
 case object SemicolonToken extends SymbolToken
 case object ColonToken extends SymbolToken
@@ -19,8 +21,8 @@ case object MissingLiteralToken extends LiteralToken
 case object TrueLiteralToken extends LiteralToken
 case object FalseLiteralToken extends LiteralToken
 sealed trait NumericLiteralToken extends LiteralToken
-case class IntNumericLiteralToken(string: String) extends NumericLiteralToken
-case class FloatNumericLiteralToken(string: String) extends NumericLiteralToken
+case class IntNumericLiteralToken(int: Int) extends NumericLiteralToken
+case class FloatNumericLiteralToken(float: Float) extends NumericLiteralToken
 
 case class VariableToken(string: String) extends Token
 case class ParameterToken(string: String) extends Token

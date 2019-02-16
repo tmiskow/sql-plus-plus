@@ -21,6 +21,15 @@ class SymbolLexerSpec extends LexerSpec {
     }
   }
 
+  it should "tokenize object brackets" in {
+    val strings = List("{", "}")
+    val expectedResults = List(LeftObjectBracketToken, RightObjectBracketToken)
+    for ((string, expectedTokens) <- strings zip expectedResults) {
+      val result = tokenizeString(string)
+      result shouldBe Right(expectedTokens)
+    }
+  }
+
   it should "tokenize commas" in {
     val string = ","
     val result = tokenizeString(string)

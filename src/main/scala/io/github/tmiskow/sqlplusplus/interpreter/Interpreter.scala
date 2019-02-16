@@ -43,6 +43,6 @@ object Interpreter extends BaseInterpreter
 
   private def handleAst(ast: Ast): Unit = {
     val result = evaluateQuery(ast)
-    println(result.toCollectionValue)
+    println(result.toArrayValue)
   }
 }

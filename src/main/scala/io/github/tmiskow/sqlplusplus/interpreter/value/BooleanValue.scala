@@ -1,7 +1,6 @@
 package io.github.tmiskow.sqlplusplus.interpreter.value
 
 sealed abstract class BooleanValue(value: Boolean) extends Value {
-  override def toCollectionValue: CollectionValue = ArrayValue.fromValues(List(this))
   override def toString: String = value.toString
 }
 

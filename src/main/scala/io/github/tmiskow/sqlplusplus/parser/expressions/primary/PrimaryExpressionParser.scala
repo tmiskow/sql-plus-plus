@@ -11,7 +11,7 @@ trait PrimaryExpressionParser extends BaseParser {
   override def literal: Parser[LiteralAst] = stringLiteral | numericLiteral |
     (NullLiteralToken | MissingLiteralToken | TrueLiteralToken | FalseLiteralToken) ^^ LiteralAst
 
-  private def stringLiteral: Parser[LiteralAst] = accept("literal", {
+  override def stringLiteral: Parser[LiteralAst] = accept("literal", {
     case token@StringLiteralToken(_) => LiteralAst(token)
   })
 

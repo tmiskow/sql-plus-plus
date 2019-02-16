@@ -8,8 +8,8 @@ import io.github.tmiskow.sqlplusplus.parser.LiteralAst
 trait LiteralInterpreter extends BaseInterpreter {
   override def evaluateLiteral(literal: LiteralAst): Value = {
     literal.token match {
-      case IntNumericLiteralToken(string) => IntValue(string.toInt)
-      case FloatNumericLiteralToken(string) => FloatValue(string.toFloat)
+      case IntNumericLiteralToken(int) => IntValue(int)
+      case FloatNumericLiteralToken(float) => FloatValue(float)
       case StringLiteralToken(string) => StringValue(string)
       case _ => throw InterpreterException("Unexpected literal AST type")
     }

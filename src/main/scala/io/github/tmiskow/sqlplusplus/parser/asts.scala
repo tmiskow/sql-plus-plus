@@ -26,6 +26,7 @@ case class LessOrEqualThanAst(left: ExpressionAst, right: ExpressionAst) extends
 
 sealed trait ConstructorAst extends ExpressionAst
 case class ArrayConstructorAst(elements: Seq[ExpressionAst]) extends ConstructorAst
+case class ObjectConstructorAst(elements: Map[LiteralAst, ExpressionAst]) extends ConstructorAst
 
 case class WithClauseAst(withElements: List[WithElementAst]) extends Ast
 case class WithElementAst(variable: VariableAst, expression: ExpressionAst) extends Ast
@@ -35,7 +36,7 @@ case class LetElementAst(variable: VariableAst, expression: ExpressionAst) exten
 
 case class SelectSetOperationAst(selectBlock: SelectBlockAst) extends Ast
 case class FromClauseAst(terms: Seq[FromTermAst]) extends Ast
-case class FromTermAst(expression: ExpressionAst, variable: VariableAst) extends Ast
+case class FromTermAst(expression: ConstructorAst, variable: VariableAst) extends Ast
 case class WhereClauseAst(comparisonExpression: ComparisonExpressionAst) extends Ast
 case class SelectStatementAst(withClause: Option[WithClauseAst], selectSetOperation: SelectSetOperationAst) extends Ast
 case class SelectBlockAst(expression: ExpressionAst, modifier: Option[Token], fromClause: Option[FromClauseAst], whereClause: Option[WhereClauseAst]) extends Ast
