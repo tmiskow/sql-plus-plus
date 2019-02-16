@@ -4,7 +4,7 @@ import io.github.tmiskow.sqlplusplus.lexer.OperatorToken
 import io.github.tmiskow.sqlplusplus.parser._
 
 trait ComparisonExpressionParser extends BaseParser {
-  override def comparisonExpression: Parser[ExpressionAst] = equality | inequality | lessThan | lessOrEqualThan
+  override def comparisonExpression: Parser[ComparisonExpressionAst] = equality | inequality | lessThan | lessOrEqualThan
 
   private def equality: Parser[EqualityAst] =
     (arithmeticExpression ~ OperatorToken("=") ~ arithmeticExpression) ^^ {

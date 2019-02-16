@@ -17,6 +17,12 @@ class Environment {
 
   def clear(): Unit = map.clear()
 
+  def withEntry(key: Key, value: Value): Environment = {
+    val clone = this.clone()
+    clone.put(key, value)
+    clone
+  }
+
   override def clone(): Environment = {
     val clone: Environment = new Environment()
     clone.map ++= map

@@ -33,6 +33,6 @@ trait BaseParser extends Parsers {
   def selectBlock: Parser[SelectBlockAst] = ???
   def expression: Parser[ExpressionAst] = ???
   def arithmeticExpression: Parser[ExpressionAst] = ???
-  def comparisonExpression: Parser[ExpressionAst] = ???
+  def comparisonExpression: Parser[ComparisonExpressionAst] = ???
   def constructor: Parser[ConstructorAst] = ???
 }

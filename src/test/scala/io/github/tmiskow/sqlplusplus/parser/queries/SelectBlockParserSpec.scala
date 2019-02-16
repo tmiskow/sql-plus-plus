@@ -1,9 +1,7 @@
 package io.github.tmiskow.sqlplusplus.parser.queries
 
-import io.github.tmiskow.sqlplusplus.lexer.{FloatNumericLiteralToken, IntNumericLiteralToken, KeywordToken, NumericLiteralToken}
-import io.github.tmiskow.sqlplusplus.parser
+import io.github.tmiskow.sqlplusplus.lexer.{FloatNumericLiteralToken, IntNumericLiteralToken, KeywordToken}
 import io.github.tmiskow.sqlplusplus.parser._
-import org.junit.Test
 
 class SelectBlockParserSpec extends ParserSpec {
   override def parserMethod: parser.Parser[Ast] = parser.selectBlock
@@ -16,8 +14,9 @@ class SelectBlockParserSpec extends ParserSpec {
         AdditionAst(
           LiteralAst(IntNumericLiteralToken("45")),
           LiteralAst(IntNumericLiteralToken("36"))),
+        Some(KeywordToken("ALL")),
         None,
-        Some(KeywordToken("ALL"))))
+        None))
   }
 
   it should "parse select block without modifier" in {
@@ -26,6 +25,7 @@ class SelectBlockParserSpec extends ParserSpec {
     result shouldBe Right(
       SelectBlockAst(
         LiteralAst(FloatNumericLiteralToken("26.3f")),
+        None,
         None,
         None))
   }
@@ -36,6 +36,7 @@ class SelectBlockParserSpec extends ParserSpec {
     result shouldBe Right(
       SelectBlockAst(
         VariableAst("foo"),
+        None,
         Some(FromClauseAst(List(
           FromTermAst(
             ArrayConstructorAst(List(
