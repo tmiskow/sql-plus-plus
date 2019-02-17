@@ -8,6 +8,11 @@ sealed trait ExpressionAst extends Ast
 
 case class LiteralAst(token: Token) extends ExpressionAst
 case class VariableAst(name: String) extends ExpressionAst
+case class PathExpressionAst(expression: ExpressionAst, specifiers: Seq[SpecifierAst]) extends ExpressionAst
+
+sealed trait SpecifierAst extends Ast
+case class FieldAst(identifier: VariableAst) extends SpecifierAst
+case class IndexAst(expression: ExpressionAst) extends SpecifierAst
 
 sealed trait ArithmeticExpressionAst extends ExpressionAst
 case class AdditionAst(left: ExpressionAst, right: ExpressionAst) extends ArithmeticExpressionAst

@@ -5,22 +5,6 @@ import io.github.tmiskow.sqlplusplus.interpreter.{BaseInterpreter, Environment, 
 import io.github.tmiskow.sqlplusplus.parser._
 
 trait ExpressionInterpreter extends BaseInterpreter {
-  def evaluateComparisonExpression(comparisonExpression: ComparisonExpressionAst, environment: Environment): Value =
-    comparisonExpression match {
-      case EqualityAst(left, right) => evaluateBinaryComparison(_ === _)(left, right, environment)
-      case InequalityAst(left, right) => evaluateBinaryComparison(_ <> _)(left, right, environment)
-      case LessThanAst(left, right) => evaluateBinaryComparison(_ < _)(left, right, environment)
-      case LessOrEqualThanAst(left, right) => evaluateBinaryComparison(_ <= _)(left, right, environment)
-    }
-
-  def evaluateBinaryComparison
-  (operation: (Value, Value) => BooleanValue)
-  (left: ExpressionAst, right: ExpressionAst, environment: Environment): BooleanValue = {
-    val leftValue = evaluateExpression(left, environment)
-    val rightValue = evaluateExpression(right, environment)
-    operation(leftValue, rightValue)
-  }
-
   override def evaluateExpression(expression: ExpressionAst, environment: Environment): Value =
     expression match {
       case literal: LiteralAst => evaluateLiteral(literal)
@@ -30,6 +14,8 @@ trait ExpressionInterpreter extends BaseInterpreter {
         evaluateComparisonExpression(comparisonExpression, environment)
       case arithmeticExpression: ArithmeticExpressionAst =>
         evaluateArithmeticExpression(arithmeticExpression, environment)
+      case pathExpression: PathExpressionAst =>
+        evaluatePathExpression(pathExpression, environment)
       case _ => throw InterpreterException(s"Unexpected expression AST type: $expression")
     }
 }

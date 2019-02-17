@@ -35,5 +35,7 @@ trait BaseParser extends Parsers {
   def expression: Parser[ExpressionAst] = ???
   def arithmeticExpression: Parser[ExpressionAst] = ???
   def comparisonExpression: Parser[ComparisonExpressionAst] = ???
+  def primaryExpression: Parser[ExpressionAst] = ???
+  def pathExpression: Parser[ExpressionAst] = ???
   def constructor: Parser[ConstructorAst] = ???
 }

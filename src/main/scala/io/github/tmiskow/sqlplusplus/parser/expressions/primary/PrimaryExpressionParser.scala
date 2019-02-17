@@ -1,9 +1,11 @@
 package io.github.tmiskow.sqlplusplus.parser.expressions.primary
 
 import io.github.tmiskow.sqlplusplus.lexer._
-import io.github.tmiskow.sqlplusplus.parser.{BaseParser, LiteralAst, VariableAst}
+import io.github.tmiskow.sqlplusplus.parser.{BaseParser, ExpressionAst, LiteralAst, VariableAst}
 
 trait PrimaryExpressionParser extends BaseParser {
+  override def primaryExpression: Parser[ExpressionAst] = variable | literal | constructor
+
   override def variable: Parser[VariableAst] = accept("variable", {
     case VariableToken(name) => VariableAst(name)
   })

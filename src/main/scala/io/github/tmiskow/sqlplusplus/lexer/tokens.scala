@@ -12,6 +12,7 @@ case object RightObjectBracketToken extends SymbolToken
 case object CommaToken extends SymbolToken
 case object SemicolonToken extends SymbolToken
 case object ColonToken extends SymbolToken
+case object DotToken extends SymbolToken
 case class OperatorToken(string: String) extends SymbolToken
 
 sealed trait LiteralToken extends Token

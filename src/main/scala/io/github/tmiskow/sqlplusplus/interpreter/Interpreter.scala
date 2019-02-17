@@ -1,7 +1,7 @@
 package io.github.tmiskow.sqlplusplus.interpreter
 
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.ExpressionInterpreter
-import io.github.tmiskow.sqlplusplus.interpreter.expressions.operator.ArithmeticExpressionsInterpreter
+import io.github.tmiskow.sqlplusplus.interpreter.expressions.operator.{ArithmeticExpressionsInterpreter, ComparisonExpressionInterpreter, PathExpressionInterpreter}
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.primary.{ConstructorInterpreter, LiteralInterpreter, VariableInterpreter}
 import io.github.tmiskow.sqlplusplus.interpreter.queries.{QueryInterpreter, SelectBlockInterpreter}
 import io.github.tmiskow.sqlplusplus.lexer.{BaseLexer, Lexer, Token}
@@ -12,6 +12,8 @@ object Interpreter extends BaseInterpreter
   with SelectBlockInterpreter
   with ExpressionInterpreter
   with ArithmeticExpressionsInterpreter
+  with ComparisonExpressionInterpreter
+  with PathExpressionInterpreter
   with ConstructorInterpreter
   with VariableInterpreter
   with LiteralInterpreter {

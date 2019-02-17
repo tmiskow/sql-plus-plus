@@ -36,6 +36,12 @@ class SymbolLexerSpec extends LexerSpec {
     result shouldBe Right(CommaToken)
   }
 
+  it should "tokenize dots" in {
+    val string = "."
+    val result = tokenizeString(string)
+    result shouldBe Right(DotToken)
+  }
+
   it should "tokenize semicolons" in {
     val string = ";"
     val result = tokenizeString(string)
