@@ -41,7 +41,7 @@ case class LetElementAst(variable: VariableAst, expression: ExpressionAst) exten
 
 case class SelectSetOperationAst(selectBlock: SelectBlockAst) extends Ast
 case class FromClauseAst(terms: Seq[FromTermAst]) extends Ast
-case class FromTermAst(expression: ConstructorAst, variable: VariableAst) extends Ast
+case class FromTermAst(expression: ExpressionAst, variable: VariableAst) extends Ast
 case class WhereClauseAst(comparisonExpression: ComparisonExpressionAst) extends Ast
 case class SelectStatementAst(withClause: Option[WithClauseAst], selectSetOperation: SelectSetOperationAst) extends Ast
 case class SelectBlockAst(expression: ExpressionAst, modifier: Option[Token], fromClause: Option[FromClauseAst], whereClause: Option[WhereClauseAst]) extends Ast

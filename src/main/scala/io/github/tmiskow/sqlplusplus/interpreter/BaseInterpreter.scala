@@ -4,7 +4,7 @@ import io.github.tmiskow.sqlplusplus.interpreter.value.{CollectionValue, Value}
 import io.github.tmiskow.sqlplusplus.parser._
 
 trait BaseInterpreter {
-  def evaluateQuery(query: Ast): Value = ???
+  def evaluateQuery(query: Ast, environment: Environment): Value = ???
   def evaluateSelectBlock(selectBlock: SelectBlockAst, environment: Environment): Value = ???
   def evaluateExpression(expression: ExpressionAst, environment: Environment): Value = ???
   def evaluateVariable(variable: VariableAst, environment: Environment): Value = ???

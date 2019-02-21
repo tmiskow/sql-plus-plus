@@ -1,11 +1,15 @@
 package io.github.tmiskow.sqlplusplus.interpreter
 
+import java.io.FileReader
+
+import io.github.tmiskow.sqlplusplus.Error
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.ExpressionInterpreter
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.operator.{ArithmeticExpressionsInterpreter, ComparisonExpressionInterpreter, PathExpressionInterpreter}
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.primary.{ConstructorInterpreter, LiteralInterpreter, VariableInterpreter}
 import io.github.tmiskow.sqlplusplus.interpreter.queries.{QueryInterpreter, SelectBlockInterpreter}
+import io.github.tmiskow.sqlplusplus.interpreter.value.Value
 import io.github.tmiskow.sqlplusplus.lexer.{BaseLexer, Lexer, Token}
-import io.github.tmiskow.sqlplusplus.parser.{Ast, BaseParser, Parser}
+import io.github.tmiskow.sqlplusplus.parser.{ArrayConstructorAst, BaseParser, Parser}
 
 object Interpreter extends BaseInterpreter
   with QueryInterpreter
@@ -20,31 +24,55 @@ object Interpreter extends BaseInterpreter
   val lexer: BaseLexer = Lexer
   val parser: BaseParser = Parser
 
+  def evaluateArgs(fileName: String, variableName: String): Environment = {
+    val reader = new FileReader(fileName)
+    val tokens = lexer.parse(lexer.all, reader) match {
+      case lexer.NoSuccess(message, _) => throw InterpreterException(message)
+      case lexer.Success(result: Seq[Token], _) => result
+    }
+    reader.close()
+    val ast = parser.parseTokens(tokens, parser.constructor) match {
+      case Left(error) => throw InterpreterException(error.message)
+      case Right(result) => result
+    }
+    val arrayValue = ast match {
+      case arrayAst: ArrayConstructorAst => evaluateConstructor(arrayAst, Environment.empty)
+      case _ => throw InterpreterException("Dataset must be an array")
+    }
+    Environment.empty.withEntry(variableName, arrayValue)
+  }
+
+  def handleArgs(args: List[String]): Environment = args match {
+    case Nil => Environment.empty
+    case fileName :: variableName :: _ => evaluateArgs(fileName, variableName)
+  }
+
   def main(args: Array[String]): Unit = {
+    val environment = handleArgs(args.toList)
     while (true) {
-      val input = scala.io.StdIn.readLine()
-      handleInput(input)
+      printPrompt()
+      val query = scala.io.StdIn.readLine()
+      handleQuery(query, environment) match {
+        case Left(error) => println(error)
+        case Right(value) => println(value)
+      }
     }
   }
 
-  private def handleInput(string: String): Unit = {
-    val result = lexer.tokenizeString(string, lexer.all)
-    result match {
-      case Left(error) => println(error)
-      case Right(tokens) => handleTokens(tokens)
-    }
-  }
+  private def printPrompt(): Unit = print("> ")
 
-  private def handleTokens(tokens: Seq[Token]): Unit = {
-    val result = parser.parseTokens(tokens, parser.query)
-    result match {
-      case Left(error) => println(error)
-      case Right(ast) => handleAst(ast)
+  private def handleQuery(string: String, environment: Environment): Either[Error, Value] =
+    tokenizeQuery(string) match {
+      case Left(error) => Left(error)
+      case Right(tokens) => parseQuery(tokens) match {
+        case Left(error) => Left(error)
+        case Right(ast) => Right(evaluateQuery(ast, environment).toArrayValue)
+      }
     }
-  }
 
-  private def handleAst(ast: Ast): Unit = {
-    val result = evaluateQuery(ast)
-    println(result.toArrayValue)
-  }
+  private def tokenizeQuery(string: String): lexer.Result[Seq[Token]] =
+    lexer.tokenizeString(string, lexer.all)
+
+  private def parseQuery(tokens: Seq[Token]): parser.Result =
+    parser.parseTokens(tokens, parser.query)
 }

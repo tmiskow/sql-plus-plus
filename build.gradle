@@ -1,11 +1,35 @@
 plugins {
     id 'idea'
     id 'scala'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 group 'tmiskow.github.io'
 version '1.0'
 targetCompatibility = '1.8'
+
+compileScala {
+    scalaCompileOptions.additionalParameters = [
+            '-feature', '-language:implicitConversions', '-language:postfixOps'
+    ]
+}
+
+application {
+    mainClassName = 'io.github.tmiskow.sqlplusplus.interpreter.Interpreter'
+}
+
+run {
+    standardInput = System.in
+}
+
+jar {
+    baseName = 'sql-plus-plus'
+    version = '1.0'
+    manifest {
+        attributes 'Main-Class': 'io.github.tmiskow.sqlplusplus.interpreter.Interpreter'
+    }
+}
 
 repositories {
     jcenter()
