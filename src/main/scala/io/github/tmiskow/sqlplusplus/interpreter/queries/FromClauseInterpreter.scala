@@ -10,7 +10,7 @@ trait FromClauseInterpreter extends BaseInterpreter {
     maybeUnnestClause match {
       case None => Seq(environment)
       case Some(unnestClause) => evaluateExpression(unnestClause.expression, environment) match {
-        case _@ArrayValue(values) => for (value <- values)
+        case ArrayValue(values) => for (value <- values)
           yield environment.withEntry(unnestClause.variable.name, value)
         case _ => throw InterpreterException("UNNEST clause must apply to array value")
       }

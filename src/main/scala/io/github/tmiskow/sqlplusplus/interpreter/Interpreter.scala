@@ -1,6 +1,7 @@
 package io.github.tmiskow.sqlplusplus.interpreter
 
 import java.io.FileReader
+import org.apache.commons.io.FilenameUtils
 
 import io.github.tmiskow.sqlplusplus.Error
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.ExpressionInterpreter
@@ -26,7 +27,32 @@ object Interpreter extends BaseInterpreter
   val lexer: BaseLexer = Lexer
   val parser: BaseParser = Parser
 
-  def evaluateArgs(fileName: String, variableName: String): Environment = {
+  def main(args: Array[String]): Unit = {
+    val environment = handleArgs(args.toList)
+    while (true) {
+      printPrompt()
+      val query = scala.io.StdIn.readLine()
+      try handleQuery(query, environment) match {
+        case Left(error) => println(error)
+        case Right(value) => println(value)
+      } catch {
+        case InterpreterException(message, _) =>
+          println(s"Interpreter error: $message")
+      }
+    }
+  }
+
+  private def handleArgs(args: List[String]): Environment = args match {
+    case Nil => Environment.empty
+    case _ =>
+      var environment = Environment.empty
+      for (filename <- args) {
+        environment = evaluateArg(filename, environment)
+      }
+      environment
+  }
+
+  private def evaluateArg(fileName: String, environment: Environment): Environment = {
     val reader = new FileReader(fileName)
     val tokens = lexer.parse(lexer.all, reader) match {
       case lexer.NoSuccess(message, _) => throw InterpreterException(message)
@@ -41,25 +67,8 @@ object Interpreter extends BaseInterpreter
       case arrayAst: ArrayConstructorAst => evaluateConstructor(arrayAst, Environment.empty)
       case _ => throw InterpreterException("Dataset must be an array")
     }
-    Environment.empty.withEntry(variableName, arrayValue)
-  }
-
-  def handleArgs(args: List[String]): Environment = args match {
-    case Nil => Environment.empty
-    case _ if args.size < 2 => throw InterpreterException("Args: <file name> <variable name>")
-    case fileName :: variableName :: _ => evaluateArgs(fileName, variableName)
-  }
-
-  def main(args: Array[String]): Unit = {
-    val environment = handleArgs(args.toList)
-    while (true) {
-      printPrompt()
-      val query = scala.io.StdIn.readLine()
-      handleQuery(query, environment) match {
-        case Left(error) => println(error)
-        case Right(value) => println(value)
-      }
-    }
+    val variableName = FilenameUtils.getBaseName(fileName)
+    environment.withEntry(variableName, arrayValue)
   }
 
   private def printPrompt(): Unit = print("> ")
