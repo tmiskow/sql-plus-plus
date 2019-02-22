@@ -72,3 +72,9 @@ Simple lexer, parser and interpeter of a subset of SQL++. It is written in Scala
   "orgName" : "geomedia"
 } ]
 ```
+
+## Resources:
+* [SQL++ manual](https://ci.apache.org/projects/asterixdb/sqlpp/manual.html)
+* [Learn by Example: Scala Parser Combinators](http://bitwalker.org/posts/2013-08-10-learn-by-example-scala-parser-combinators/)
+* [Building a lexer and parser with Scala's Parser Combinators](https://enear.github.io/2016/03/31/parser-combinators/)
+* [Combinator Parsing in Scala](http://labun.com/fh/ma.pdf)
