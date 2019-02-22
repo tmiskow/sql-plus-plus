@@ -4,16 +4,14 @@ class KeywordLexerSpec extends LexerSpec {
   override def tokenizerMethod: lexer.Parser[Token] = lexer.keyword
 
   "Lexer" should "tokenize keywords" in {
-    val strings = List("select", "all", "distinct", "with", "let")
-    for (string <- strings) {
+    for (string <- KeywordLexer.keywordStrings) {
       val result = tokenizeString(string)
       result shouldBe Right(KeywordToken(string.toUpperCase))
     }
   }
 
   it should "tokenize value keywords" in {
-    val strings = List("VALUE", "ELEMENT", "RAW")
-    for (string <- strings) {
+    for (string <- KeywordLexer.valueKeywordStrings) {
       val result = tokenizeString(string)
       result shouldBe Right(KeywordToken("VALUE"))
     }

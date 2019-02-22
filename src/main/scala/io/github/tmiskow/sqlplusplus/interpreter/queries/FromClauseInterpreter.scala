@@ -5,6 +5,17 @@ import io.github.tmiskow.sqlplusplus.interpreter.{BaseInterpreter, Context, Envi
 import io.github.tmiskow.sqlplusplus.parser._
 
 trait FromClauseInterpreter extends BaseInterpreter {
+
+  private def evaluateUnnestClause(environment: Environment, maybeUnnestClause: Option[UnnestClauseAst]): Seq[Environment] =
+    maybeUnnestClause match {
+      case None => Seq(environment)
+      case Some(unnestClause) => evaluateExpression(unnestClause.expression, environment) match {
+        case _@ArrayValue(values) => for (value <- values)
+          yield environment.withEntry(unnestClause.variable.name, value)
+        case _ => throw InterpreterException("UNNEST clause must apply to array value")
+      }
+    }
+
   override def evaluateFromClause(fromClause: FromClauseAst, environment: Environment): Context = {
     assert(fromClause.terms.size == 1)
     val fromTerm = fromClause.terms.head
@@ -13,6 +24,10 @@ trait FromClauseInterpreter extends BaseInterpreter {
         for (value <- values) yield environment.withEntry(fromTerm.variable.name, value)
       case _ => throw InterpreterException("Collection used in FROM clause must be an array")
     }
-    Context(Seq[String](fromTerm.variable.name), environments)
+    val unnestedEnvironments = for {
+      environment <- environments
+      unnestedEnvironment <- evaluateUnnestClause(environment, fromTerm.unnestClause)
+    } yield unnestedEnvironment
+    Context(Seq[String](fromTerm.variable.name), unnestedEnvironments)
   }
 }

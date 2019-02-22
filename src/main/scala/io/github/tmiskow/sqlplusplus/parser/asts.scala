@@ -42,9 +42,14 @@ case class WithClauseAst(withElements: List[WithElementAst]) extends Ast
 case class WithElementAst(variable: VariableAst, expression: ExpressionAst) extends Ast
 
 case class SelectSetOperationAst(selectBlock: SelectBlockAst) extends Ast
-case class FromClauseAst(terms: Seq[FromTermAst]) extends Ast
-case class FromTermAst(expression: ExpressionAst, variable: VariableAst) extends Ast
+case class UnnestClauseAst(expression: ExpressionAst, variable: VariableAst) extends Ast
 case class WhereClauseAst(comparisonExpression: ComparisonExpressionAst) extends Ast
+
+case class FromClauseAst(terms: Seq[FromTermAst]) extends Ast
+case class FromTermAst
+(expression: ExpressionAst,
+ variable: VariableAst,
+ unnestClause: Option[UnnestClauseAst]) extends Ast
 
 case class SelectStatementAst
 (withClause: Option[WithClauseAst],

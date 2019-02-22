@@ -31,7 +31,8 @@ class SelectBlockParserSpec extends ParserSpec {
         Some(FromClauseAst(Seq(
           FromTermAst(
             VariableAst("Users"),
-            VariableAst("user"))))),
+            VariableAst("user"),
+            None)))),
         None))
   }
 
@@ -53,7 +54,8 @@ class SelectBlockParserSpec extends ParserSpec {
         Some(FromClauseAst(Seq(
           FromTermAst(
             VariableAst("Users"),
-            VariableAst("user"))))),
+            VariableAst("user"),
+            None)))),
         None))
   }
 
@@ -70,7 +72,8 @@ class SelectBlockParserSpec extends ParserSpec {
               LiteralAst(IntNumericLiteralToken(1)),
               LiteralAst(IntNumericLiteralToken(2)),
               LiteralAst(IntNumericLiteralToken(3)))),
-            VariableAst("foo"))))),
+            VariableAst("foo"),
+            None)))),
         Some(WhereClauseAst(
           LessThanAst(
             LiteralAst(IntNumericLiteralToken(2)),
@@ -91,7 +94,8 @@ class SelectBlockParserSpec extends ParserSpec {
                 LiteralAst(IntNumericLiteralToken(1)),
                 LiteralAst(IntNumericLiteralToken(2)),
                 LiteralAst(IntNumericLiteralToken(3)))),
-              VariableAst("foo"))))),
+              VariableAst("foo"),
+              None)))),
           None))
     }
   }

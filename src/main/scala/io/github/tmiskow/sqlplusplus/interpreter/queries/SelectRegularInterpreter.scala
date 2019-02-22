@@ -17,7 +17,7 @@ trait SelectRegularInterpreter extends BaseInterpreter {
           evaluateExpressionProjection(expressionProjection, context)
       }).reduce { (values: Seq[ObjectValue], newValues: Seq[ObjectValue]) =>
         for ((value, newValue) <- values zip newValues)
-          yield ObjectValue((value.map.toSeq ++ newValue.map.toSeq).toMap)
+          yield ObjectValue(value.map ++ newValue.map)
       }
     }
 

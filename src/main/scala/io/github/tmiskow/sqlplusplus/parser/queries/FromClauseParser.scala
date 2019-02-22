@@ -1,15 +1,22 @@
 package io.github.tmiskow.sqlplusplus.parser.queries
 
 import io.github.tmiskow.sqlplusplus.lexer.{CommaToken, KeywordToken}
-import io.github.tmiskow.sqlplusplus.parser.{BaseParser, FromClauseAst, FromTermAst}
+import io.github.tmiskow.sqlplusplus.parser._
 
 trait FromClauseParser extends BaseParser {
   override def fromClause: Parser[FromClauseAst] =
     (KeywordToken("FROM") ~> rep1sep(fromTerm, CommaToken)) ^^ FromClauseAst
 
-  //TODO: ... (( <AS> )? Variable)? ( ( JoinType )? ( JoinClause | UnnestClause ) )*
   private def fromTerm: Parser[FromTermAst] =
-    ((constructor | identifier) ~ ((KeywordToken("AS") ?) ~> identifier)) ^^ {
-      case collection ~ identifier => FromTermAst(collection, identifier)
+    fromCollection ~ ((KeywordToken("AS") ?) ~> identifier) ~ (unnestClause ?) ^^ {
+      case collection ~ identifier ~ unnestClause =>
+        FromTermAst(collection, identifier, unnestClause)
+    }
+
+  private def fromCollection: Parser[ExpressionAst] = constructor | identifier
+
+  private def unnestClause: Parser[UnnestClauseAst] =
+    (KeywordToken("UNNEST") ~> expression) ~ ((KeywordToken("AS") ?) ~> identifier) ^^ {
+      case expression ~ identifier => UnnestClauseAst(expression, identifier)
     }
 }
