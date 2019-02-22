@@ -4,7 +4,7 @@ import io.github.tmiskow.sqlplusplus.lexer.{DotToken, LeftArrayBracketToken, Rig
 import io.github.tmiskow.sqlplusplus.parser._
 
 trait PathExpressionParser extends BaseParser {
-  override def pathExpression: Parser[PathExpressionAst] = (constructor | variable) ~ rep1(field | index) ^^ {
+  override def pathExpression: Parser[PathExpressionAst] = (constructor | identifier) ~ rep1(field | index) ^^ {
     case expression ~ specifiers => PathExpressionAst(expression, specifiers)
   }
 
@@ -12,6 +12,4 @@ trait PathExpressionParser extends BaseParser {
     (LeftArrayBracketToken ~> arithmeticExpression <~ RightArrayBracketToken) ^^ IndexAst
 
   private def field: Parser[FieldAst] = DotToken ~> identifier ^^ FieldAst
-
-  private def identifier: Parser[VariableAst] = variable
 }

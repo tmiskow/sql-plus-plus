@@ -6,7 +6,7 @@ import io.github.tmiskow.sqlplusplus.Error
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.ExpressionInterpreter
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.operator.{ArithmeticExpressionsInterpreter, ComparisonExpressionInterpreter, PathExpressionInterpreter}
 import io.github.tmiskow.sqlplusplus.interpreter.expressions.primary.{ConstructorInterpreter, LiteralInterpreter, VariableInterpreter}
-import io.github.tmiskow.sqlplusplus.interpreter.queries.{QueryInterpreter, SelectBlockInterpreter}
+import io.github.tmiskow.sqlplusplus.interpreter.queries.{FromClauseInterpreter, QueryInterpreter, SelectBlockInterpreter, SelectRegularInterpreter}
 import io.github.tmiskow.sqlplusplus.interpreter.value.Value
 import io.github.tmiskow.sqlplusplus.lexer.{BaseLexer, Lexer, Token}
 import io.github.tmiskow.sqlplusplus.parser.{ArrayConstructorAst, BaseParser, Parser}
@@ -14,6 +14,8 @@ import io.github.tmiskow.sqlplusplus.parser.{ArrayConstructorAst, BaseParser, Pa
 object Interpreter extends BaseInterpreter
   with QueryInterpreter
   with SelectBlockInterpreter
+  with SelectRegularInterpreter
+  with FromClauseInterpreter
   with ExpressionInterpreter
   with ArithmeticExpressionsInterpreter
   with ComparisonExpressionInterpreter
@@ -44,6 +46,7 @@ object Interpreter extends BaseInterpreter
 
   def handleArgs(args: List[String]): Environment = args match {
     case Nil => Environment.empty
+    case _ if args.size < 2 => throw InterpreterException("Args: <file name> <variable name>")
     case fileName :: variableName :: _ => evaluateArgs(fileName, variableName)
   }
 

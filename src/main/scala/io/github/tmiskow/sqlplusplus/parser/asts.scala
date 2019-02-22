@@ -33,15 +33,29 @@ sealed trait ConstructorAst extends ExpressionAst
 case class ArrayConstructorAst(elements: Seq[ExpressionAst]) extends ConstructorAst
 case class ObjectConstructorAst(elements: Map[LiteralAst, ExpressionAst]) extends ConstructorAst
 
+sealed trait ProjectionAst extends Ast
+case class ExpressionProjectionAst(expression: ExpressionAst, variable: VariableAst) extends ProjectionAst
+case class PathProjectionAst(variable: VariableAst) extends ProjectionAst
+case object AsteriskProjectionAst extends ProjectionAst
+
 case class WithClauseAst(withElements: List[WithElementAst]) extends Ast
 case class WithElementAst(variable: VariableAst, expression: ExpressionAst) extends Ast
-
-case class LetClauseAst(letElements: List[LetElementAst]) extends Ast
-case class LetElementAst(variable: VariableAst, expression: ExpressionAst) extends Ast
 
 case class SelectSetOperationAst(selectBlock: SelectBlockAst) extends Ast
 case class FromClauseAst(terms: Seq[FromTermAst]) extends Ast
 case class FromTermAst(expression: ExpressionAst, variable: VariableAst) extends Ast
 case class WhereClauseAst(comparisonExpression: ComparisonExpressionAst) extends Ast
-case class SelectStatementAst(withClause: Option[WithClauseAst], selectSetOperation: SelectSetOperationAst) extends Ast
-case class SelectBlockAst(expression: ExpressionAst, modifier: Option[Token], fromClause: Option[FromClauseAst], whereClause: Option[WhereClauseAst]) extends Ast
+
+case class SelectStatementAst
+(withClause: Option[WithClauseAst],
+ selectBlock: SelectBlockAst) extends Ast
+
+case class SelectBlockAst
+(select: SelectAst,
+ modifier: Option[Token],
+ fromClause: Option[FromClauseAst],
+ whereClause: Option[WhereClauseAst]) extends Ast
+
+sealed trait SelectAst extends Ast
+case class SelectRegularAst(projections: Seq[ProjectionAst]) extends SelectAst
+case class SelectValueAst(expression: ExpressionAst) extends SelectAst

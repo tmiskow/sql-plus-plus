@@ -18,5 +18,8 @@ trait ArithmeticExpressionParser extends BaseParser {
     chainl1(factor, OperatorToken("^") ^^^ ExponentiationAst)
 
   private def factor: Parser[ExpressionAst] =
-    literal | pathExpression | variable | LeftParenthesisToken ~> arithmeticExpression <~ RightParenthesisToken
+    literal | pathExpression | identifier | parenthesizedExpression
+
+  private def parenthesizedExpression: Parser[ExpressionAst] =
+    LeftParenthesisToken ~> arithmeticExpression <~ RightParenthesisToken
 }

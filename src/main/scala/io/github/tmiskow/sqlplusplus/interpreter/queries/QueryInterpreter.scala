@@ -16,7 +16,7 @@ trait QueryInterpreter extends BaseInterpreter {
       case None => environment
       case Some(withClause) => evaluateWithClause(withClause, environment)
     }
-    evaluateSelectSetOperation(selectStatement.selectSetOperation, newEnvironment)
+    evaluateSelectBlock(selectStatement.selectBlock, newEnvironment)
   }
 
   private def evaluateWithClause(withClause: WithClauseAst, environment: Environment): Environment = {
@@ -31,9 +31,5 @@ trait QueryInterpreter extends BaseInterpreter {
     val variableName = withElement.variable.name
     val value = evaluateExpression(withElement.expression, environment)
     environment.withEntry(variableName, value)
-  }
-
-  private def evaluateSelectSetOperation(selectSetOperation: SelectSetOperationAst, environment: Environment): Value = {
-    evaluateSelectBlock(selectSetOperation.selectBlock, environment)
   }
 }
